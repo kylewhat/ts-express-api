@@ -102,7 +102,7 @@ export const deleteState = async (req: StateRequest, res: Response) => {
     const existingState = await State.findOne({ stateCode: state.code }).exec();
 
     if (!existingState || !Array.isArray(existingState.funfacts)) {
-      return res.status(404).json({ error: 'No fun facts found for this state.' });
+      return res.status(404).json({ message: `No Fun Facts found for ${state.name}` });
     }
 
     const zeroBasedIndex = index - 1;
