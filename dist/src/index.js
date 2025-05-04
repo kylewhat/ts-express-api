@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const mongoose_1 = require("./db/mongoose");
@@ -20,33 +21,68 @@ const stateController_1 = require("./controllers/stateController");
 require('dotenv').config();
 const app = (0, express_1.default)();
 const port = process.env.PORT || 80;
+app.use((0, cors_1.default)({
+    origin: '*',
+    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+app.use(express_1.default.json());
 const statesData = JSON.parse(fs_1.default.readFileSync(path_1.default.join(__dirname, 'data/states.json'), 'utf-8'));
 // Middleware to validate state abbreviation
 const validateState = (req, res, next) => {
     if (!req.params.state) {
-        res.status(404).json({ error: 'State required.' });
+        next();
+        return;
     }
     const stateAbbreviation = req.params.state.toUpperCase();
     const state = statesData.find((s) => s.code === stateAbbreviation);
     if (!state) {
-        res.status(404).json({ error: 'State not found or invalid state abbreviation.' });
+        res.status(404).json({ message: 'Invalid state abbreviation parameter' });
+    }
+    if (req.params.prop) {
+        req.prop = req.params.prop;
     }
     req.stateData = state;
     next();
 };
 // Route that delegates to controller methods
-app.all('/states/:state{/:property}', validateState, (req, res) => {
+app.all('/states{/:state}{/:prop}', validateState, (req, res) => {
     switch (req.method) {
         case 'GET':
-            return (0, stateController_1.getState)(req, res);
+            if (!req.stateData) {
+                (0, stateController_1.getAllStates)(req, res);
+                return;
+            }
+            if (req.prop) {
+                (0, stateController_1.getStateProperty)(req, res);
+                return;
+            }
+            (0, stateController_1.getState)(req, res);
+            return;
         case 'POST':
-            return (0, stateController_1.postState)(req, res);
-        case 'PUT':
-            return (0, stateController_1.putState)(req, res);
+            (0, stateController_1.postState)(req, res);
+            return;
+        case 'PATCH':
+            (0, stateController_1.patchState)(req, res);
+            return;
         case 'DELETE':
-            return (0, stateController_1.deleteState)(req, res);
+            (0, stateController_1.deleteState)(req, res);
+            return;
         default:
             res.status(405).send('Method Not Allowed');
+    }
+});
+// Catch all other routes
+app.use((req, res) => {
+    const accept = req.headers.accept || '';
+    if (accept.includes('*/*') || accept.includes('text/html')) {
+        res.status(404).sendFile(path_1.default.join(__dirname, 'views', '404.html'));
+    }
+    else if (accept.includes('application/json')) {
+        res.status(404).json({ error: '404 Not Found' });
+    }
+    else {
+        res.status(404).type('text').send('404 Not Found');
     }
 });
 (() => __awaiter(void 0, void 0, void 0, function* () {

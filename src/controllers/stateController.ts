@@ -144,7 +144,7 @@ export const getAllStates = async (req: StateRequest, res: Response) => {
     res.json(fullStates);
   } catch (err) {
     console.error('Error fetching states:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
@@ -195,11 +195,11 @@ export const getStateProperty = async (req: StateRequest, res: Response) => {
               'admitted': staticState.admission_date
             });
       default:
-        res.status(405).send('Property not found');
+        return res.status(405).send('Property not found');
     }
 
   } catch (err) {
     console.error('Error fetching states:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
 };
