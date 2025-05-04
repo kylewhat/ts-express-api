@@ -151,7 +151,7 @@ const getStateProperty = (req, res) => __awaiter(void 0, void 0, void 0, functio
                 if (funfacts.length === 0) {
                     return res
                         .status(404)
-                        .json({ message: `No fun facts found for ${stateName}` });
+                        .json({ message: `No Fun Facts found for ${stateName}` });
                 }
                 const randomFact = funfacts[Math.floor(Math.random() * funfacts.length)];
                 return res.json({

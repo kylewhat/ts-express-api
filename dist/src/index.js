@@ -47,10 +47,6 @@ const validateState = (req, res, next) => {
 };
 // Route that delegates to controller methods
 app.all('/states{/:state}{/:prop}', validateState, (req, res) => {
-    if (res.headersSent) {
-        return;
-    }
-    console.log("HEADERS ", res);
     switch (req.method) {
         case 'GET':
             if (!req.stateData) {
