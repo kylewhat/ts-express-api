@@ -53,6 +53,7 @@ app.all('/states{/:state}{/:prop}', validateState, (req: StateRequest, res: Resp
   if(res.headersSent){
     return;
   }
+  console.log("HEADERS ", res);
   switch (req.method) {
     case 'GET':
       if(!req.stateData){
