@@ -174,7 +174,7 @@ export const getStateProperty = async (req: StateRequest, res: Response) => {
         if (funfacts.length === 0) {
           return res
             .status(404)
-            .json({ error: `No fun facts found for ${stateName}.` });
+            .json({ message: `No fun facts found for ${stateName}` });
         }
 
         const randomFact = funfacts[
