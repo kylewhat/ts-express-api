@@ -66,7 +66,7 @@ const patchState = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     try {
         const existingState = yield state_1.default.findOne({ stateCode: state.code }).exec();
         if (!existingState || !Array.isArray(existingState.funfacts)) {
-            return res.status(404).json({ message: 'No fun facts found for this state.' });
+            return res.status(404).json({ message: `No fun facts found for ${state.name}.` });
         }
         const zeroBasedIndex = index - 1;
         if (zeroBasedIndex < 0 || zeroBasedIndex >= existingState.funfacts.length) {
