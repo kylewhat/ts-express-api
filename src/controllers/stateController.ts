@@ -144,7 +144,8 @@ export const getAllStates = async (req: StateRequest, res: Response) => {
     return res.status(200).json(fullStates);
   } catch (err) {
     console.error('Error fetching states:', err);
-    return res.status(500).json({ error: 'Internal Server Error' });
+    console.log(err)
+    // return res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
@@ -164,6 +165,7 @@ export const getStateProperty = async (req: StateRequest, res: Response) => {
             .status(404)
             .json({ error: `No fun facts found for ${stateName}.` });
         }
+
         const randomFact = funfacts[
           Math.floor(Math.random() * funfacts.length)
         ];

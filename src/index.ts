@@ -29,7 +29,7 @@ const statesData: State[] = JSON.parse(fs.readFileSync(path.join(__dirname, 'dat
 // Middleware to validate state abbreviation
 const validateState = (req: StateRequest, res: Response, next: NextFunction): void => {
   if (!req.params.state) {
-    return;
+    return next();
   }
 
   const stateAbbreviation = req.params.state.toUpperCase();
