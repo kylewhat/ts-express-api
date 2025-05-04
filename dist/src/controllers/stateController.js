@@ -69,7 +69,7 @@ const patchState = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     try {
         const existingState = yield state_1.default.findOne({ stateCode: state.code }).exec();
         if (!existingState || !Array.isArray(existingState.funfacts)) {
-            return res.status(404).json({ message: `No Fun Facts found for ${state.name}` });
+            return res.status(404).json({ message: `No Fun Facts found forfff  ${state.name}` });
         }
         const zeroBasedIndex = index - 1;
         if (zeroBasedIndex < 0 || zeroBasedIndex >= existingState.funfacts.length) {
@@ -85,20 +85,22 @@ const patchState = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 exports.patchState = patchState;
 const deleteState = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const state = req.stateData;
-    const { index } = req.body;
+    const index = (_a = req.body) === null || _a === void 0 ? void 0 : _a.index;
+    const staticState = states_json_1.default.find(s => s.code === state.code);
     // Validate index
     if (!index || typeof index !== 'number' || index < 1) {
-        return res.status(400).json({ error: 'Valid index is required and must be 1 or greater.' });
+        return res.status(400).json({ message: 'State fun fact index value required' });
     }
     try {
         const existingState = yield state_1.default.findOne({ stateCode: state.code }).exec();
         if (!existingState || !Array.isArray(existingState.funfacts)) {
-            return res.status(404).json({ message: `No Fun Facts found for ${state.name}` });
+            return res.status(404).json({ message: `No Fun Facts found for ${staticState.state}` });
         }
         const zeroBasedIndex = index - 1;
         if (zeroBasedIndex < 0 || zeroBasedIndex >= existingState.funfacts.length) {
-            return res.status(400).json({ error: 'Index out of range.' });
+            return res.status(400).json({ message: `No Fun Fact found at that index for ${staticState.state}` });
         }
         // Remove funfact at the index
         existingState.funfacts.splice(zeroBasedIndex, 1);
@@ -151,7 +153,7 @@ const getStateProperty = (req, res) => __awaiter(void 0, void 0, void 0, functio
                 if (funfacts.length === 0) {
                     return res
                         .status(404)
-                        .json({ message: `No Fun Facts found for ${stateName}` });
+                        .json({ message: `No Fun Facts found for ${staticState.state}` });
                 }
                 const randomFact = funfacts[Math.floor(Math.random() * funfacts.length)];
                 return res.json({

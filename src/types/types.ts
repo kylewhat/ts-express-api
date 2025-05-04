@@ -9,4 +9,5 @@ export interface StateRequest extends Request {
   stateData?: State;
   contig?: boolean;
   prop?: string;
+  index?: string;
 }

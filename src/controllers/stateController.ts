@@ -72,7 +72,7 @@ export const patchState = async (req: StateRequest, res: Response) => {
       const existingState = await State.findOne({ stateCode: state.code }).exec();
   
       if (!existingState || !Array.isArray(existingState.funfacts)) {
-        return res.status(404).json({ message: `No Fun Facts found for ${state.name}`});
+        return res.status(404).json({ message: `No Fun Facts found forfff  ${state.name}`});
       }
   
       const zeroBasedIndex = index - 1;
@@ -95,24 +95,25 @@ export const patchState = async (req: StateRequest, res: Response) => {
 
 export const deleteState = async (req: StateRequest, res: Response) => {
   const state = req.stateData!;
-  const { index } = req.body;
+  const index = req.body?.index;
+  const staticState = (statesData as any[]).find(s => s.code === state.code);
 
   // Validate index
   if (!index || typeof index !== 'number' || index < 1) {
-    return res.status(400).json({ error: 'Valid index is required and must be 1 or greater.' });
+    return res.status(400).json({ message: 'State fun fact index value required' });
   }
 
   try {
     const existingState = await State.findOne({ stateCode: state.code }).exec();
 
     if (!existingState || !Array.isArray(existingState.funfacts)) {
-      return res.status(404).json({ message: `No Fun Facts found for ${state.name}` });
+      return res.status(404).json({ message: `No Fun Facts found for ${staticState.state}` });
     }
 
     const zeroBasedIndex = index - 1;
 
     if (zeroBasedIndex < 0 || zeroBasedIndex >= existingState.funfacts.length) {
-      return res.status(400).json({ error: 'Index out of range.' });
+      return res.status(400).json({ message: `No Fun Fact found at that index for ${staticState.state}` });
     }
 
     // Remove funfact at the index
@@ -174,7 +175,7 @@ export const getStateProperty = async (req: StateRequest, res: Response) => {
         if (funfacts.length === 0) {
           return res
             .status(404)
-            .json({ message: `No Fun Facts found for ${stateName}` });
+            .json({ message: `No Fun Facts found for ${staticState.state}` });
         }
 
         const randomFact = funfacts[
