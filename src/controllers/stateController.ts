@@ -7,11 +7,13 @@ export const getState = async (req: StateRequest, res: Response) => {
   const state = req.stateData!;
   const doc = await State.findOne({ stateCode: state.code }).exec();
   const funfacts = doc?.funfacts || [];
-  return res.status(200)
-  .json({
-    ...state,
-    funfacts
-  });
+  const responseData: Record<string, any> = { ...state };
+
+  if (doc?.funfacts && doc.funfacts.length > 0) {
+    responseData.funfacts = doc.funfacts;
+  }
+
+  return res.status(200).json(responseData);
 };
 
 export const postState = async (req: StateRequest, res: Response) => {

@@ -37,7 +37,7 @@ const validateState = (req: StateRequest, res: Response, next: NextFunction): vo
   const state = statesData.find((s) => s.code === stateAbbreviation);
 
   if (!state) {
-    res.status(404).json({ error: 'State not found or invalid state abbreviation.' });
+    res.status(404).json({ message: 'Invalid state abbreviation parameter' });
   }
 
   if(req.params.prop){
@@ -79,7 +79,7 @@ app.all('/states{/:state}{/:prop}', validateState, (req: StateRequest, res: Resp
 // Catch all other routes
 app.use((req: Request, res: Response) => {
   const accept = req.headers.accept || '';
-  if (accept.includes('text/html')) {
+  if (accept.includes('*/*') || accept.includes('text/html')) {
     res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
   } else if (accept.includes('application/json')) {
     res.status(404).json({ error: '404 Not Found' });
