@@ -20,7 +20,7 @@ export const postState = async (req: StateRequest, res: Response) => {
   const state = req.stateData!;
   const { funfacts } = req.body;
 
-  if (funfacts.length === 0) {
+  if (!funfacts || funfacts.length === 0) {
     return res.status(400).json({ message: 'State fun facts value required' });
   }
 
