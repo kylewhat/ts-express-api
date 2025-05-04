@@ -23,7 +23,7 @@ app.use(cors({
   methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
-
+app.use(express.json());
 const statesData: State[] = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/states.json'), 'utf-8'));
 
 // Middleware to validate state abbreviation

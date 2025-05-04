@@ -14,19 +14,105 @@ export const getState = async (req: StateRequest, res: Response) => {
   });
 };
 
-export const postState = (req: StateRequest, res: Response) => {
+export const postState = async (req: StateRequest, res: Response) => {
   const state = req.stateData!;
-  res.send(`POST: Creating resource for state ${state.code}`);
+  const { funfacts } = req.body;
+
+  if (!Array.isArray(funfacts) || funfacts.length === 0) {
+    return res.status(400).json({ error: 'Funfacts must be a non-empty array.' });
+  }
+
+  try {
+    const existingState = await State.findOne({ stateCode: state.code }).exec();
+
+    if (existingState) {
+      existingState.funfacts.push(...funfacts);
+      await existingState.save();
+      return res.json({
+        ...state,
+        funfacts: existingState.funfacts
+      });
+    } else {
+      return res.status(404).json({error: 'state not found'});
+    }
+  } catch (err) {
+    return res.status(500).json({ error: 'Database error', details: err });
+  }
 };
 
-export const patchState = (req: StateRequest, res: Response) => {
-  const state = req.stateData!;
-  res.send(`PUT: Updating resource for state ${state.code}`);
+
+export const patchState = async (req: StateRequest, res: Response) => {
+    const state = req.stateData!;
+    const { index, funfact } = req.body;
+  
+    // Validate inputs
+    if (!index || typeof index !== 'number' || index < 1) {
+      return res.status(400).json({ error: 'Valid index is required and must be 1 or greater.' });
+    }
+  
+    console.log(funfact)
+    if (!funfact || typeof funfact !== 'string') {
+      return res.status(400).json({ error: 'Funfact must be a non-empty string.' });
+    }
+  
+    try {
+      const existingState = await State.findOne({ stateCode: state.code }).exec();
+  
+      if (!existingState || !Array.isArray(existingState.funfacts)) {
+        return res.status(404).json({ error: 'No fun facts found for this state.' });
+      }
+  
+      const zeroBasedIndex = index - 1;
+  
+      if (zeroBasedIndex < 0 || zeroBasedIndex >= existingState.funfacts.length) {
+        return res.status(400).json({ error: 'Index out of range.' });
+      }
+  
+      existingState.funfacts[zeroBasedIndex] = funfact;
+      await existingState.save();
+  
+      return res.json({
+        ...state,
+        funfacts: existingState.funfacts,
+      });
+    } catch (err) {
+      return res.status(500).json({ error: 'Database error', details: err });
+    }
 };
 
-export const deleteState = (req: StateRequest, res: Response) => {
+export const deleteState = async (req: StateRequest, res: Response) => {
   const state = req.stateData!;
-  res.send(`DELETE: Removing resource for state ${state.code}`);
+  const { index } = req.body;
+
+  // Validate index
+  if (!index || typeof index !== 'number' || index < 1) {
+    return res.status(400).json({ error: 'Valid index is required and must be 1 or greater.' });
+  }
+
+  try {
+    const existingState = await State.findOne({ stateCode: state.code }).exec();
+
+    if (!existingState || !Array.isArray(existingState.funfacts)) {
+      return res.status(404).json({ error: 'No fun facts found for this state.' });
+    }
+
+    const zeroBasedIndex = index - 1;
+
+    if (zeroBasedIndex < 0 || zeroBasedIndex >= existingState.funfacts.length) {
+      return res.status(400).json({ error: 'Index out of range.' });
+    }
+
+    // Remove funfact at the index
+    existingState.funfacts.splice(zeroBasedIndex, 1);
+    await existingState.save();
+
+    return res.json({
+      ...state,
+      funfacts: existingState.funfacts
+    });
+  } catch (err) {
+    return res.status(500).json({ error: 'Database error', details: err });
+  }
 };
 
 export const getAllStates = async (req: StateRequest, res: Response) => {
