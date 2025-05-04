@@ -31,13 +31,13 @@ const statesData = JSON.parse(fs_1.default.readFileSync(path_1.default.join(__di
 // Middleware to validate state abbreviation
 const validateState = (req, res, next) => {
     if (!req.params.state) {
-        next();
-        return;
+        return next();
     }
     const stateAbbreviation = req.params.state.toUpperCase();
     const state = statesData.find((s) => s.code === stateAbbreviation);
     if (!state) {
         res.status(404).json({ message: 'Invalid state abbreviation parameter' });
+        return;
     }
     if (req.params.prop) {
         req.prop = req.params.prop;
@@ -47,6 +47,10 @@ const validateState = (req, res, next) => {
 };
 // Route that delegates to controller methods
 app.all('/states{/:state}{/:prop}', validateState, (req, res) => {
+    if (res.headersSent) {
+        return;
+    }
+    console.log("HEADERS ", res);
     switch (req.method) {
         case 'GET':
             if (!req.stateData) {
@@ -70,6 +74,7 @@ app.all('/states{/:state}{/:prop}', validateState, (req, res) => {
             return;
         default:
             res.status(405).send('Method Not Allowed');
+            return;
     }
 });
 // Catch all other routes

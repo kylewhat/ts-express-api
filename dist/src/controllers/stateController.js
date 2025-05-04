@@ -121,11 +121,12 @@ const getAllStates = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         else if (contigValue === false) {
             fullStates = fullStates.filter(s => s.code === 'AK' || s.code === 'HI');
         }
-        res.json(fullStates);
+        return res.status(200).json(fullStates);
     }
     catch (err) {
         console.error('Error fetching states:', err);
-        return res.status(500).json({ error: 'Internal Server Error' });
+        return;
+        // return res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 exports.getAllStates = getAllStates;
@@ -134,7 +135,7 @@ const getStateProperty = (req, res) => __awaiter(void 0, void 0, void 0, functio
     try {
         const state = req.stateData;
         const staticState = states_json_1.default.find(s => s.code === state.code);
-        const stateName = staticState.name;
+        const stateName = staticState.state;
         const property = (_a = req.prop) === null || _a === void 0 ? void 0 : _a.toUpperCase();
         switch (property) {
             case 'FUNFACT':
