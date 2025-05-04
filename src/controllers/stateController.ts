@@ -141,7 +141,7 @@ export const getAllStates = async (req: StateRequest, res: Response) => {
       fullStates = fullStates.filter(s => s.code === 'AK' || s.code === 'HI');
     }
 
-    res.json(fullStates);
+    return res.status(200).json(fullStates);
   } catch (err) {
     console.error('Error fetching states:', err);
     return res.status(500).json({ error: 'Internal Server Error' });
