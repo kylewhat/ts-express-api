@@ -35,7 +35,15 @@ export const postState = async (req: StateRequest, res: Response) => {
         funfacts: existingState.funfacts
       });
     } else {
-      return res.status(404).json({error: 'state not found'});
+        const newState = new State({
+          stateCode: state.code,
+          funfacts
+        });
+        await newState.save();
+        return res.status(201).json({
+          ...state,
+          funfacts: newState.funfacts
+        }); 
     }
   } catch (err) {
     return res.status(500).json({ error: 'Database error', details: err });
