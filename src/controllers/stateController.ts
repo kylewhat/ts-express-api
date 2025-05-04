@@ -60,7 +60,6 @@ export const patchState = async (req: StateRequest, res: Response) => {
       return res.status(400).json({ error: 'Valid index is required and must be 1 or greater.' });
     }
   
-    console.log(funfact)
     if (!funfact || typeof funfact !== 'string') {
       return res.status(400).json({ error: 'Funfact must be a non-empty string.' });
     }
@@ -69,7 +68,7 @@ export const patchState = async (req: StateRequest, res: Response) => {
       const existingState = await State.findOne({ stateCode: state.code }).exec();
   
       if (!existingState || !Array.isArray(existingState.funfacts)) {
-        return res.status(404).json({ error: 'No fun facts found for this state.' });
+        return res.status(404).json({ message: 'No fun facts found for this state.' });
       }
   
       const zeroBasedIndex = index - 1;
