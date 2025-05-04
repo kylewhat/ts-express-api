@@ -68,7 +68,7 @@ export const patchState = async (req: StateRequest, res: Response) => {
       const existingState = await State.findOne({ stateCode: state.code }).exec();
   
       if (!existingState || !Array.isArray(existingState.funfacts)) {
-        return res.status(404).json({ message: `No fun facts found for ${state.name}.`});
+        return res.status(404).json({ message: `No Fun Facts found for ${state.name}`});
       }
   
       const zeroBasedIndex = index - 1;
