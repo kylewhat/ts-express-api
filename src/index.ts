@@ -37,7 +37,7 @@ const validateState = (req: StateRequest, res: Response, next: NextFunction): vo
 
   if (!state) {
     res.status(404).json({ message: 'Invalid state abbreviation parameter' });
-    return;
+    return next();
   }
 
   if(req.params.prop){
