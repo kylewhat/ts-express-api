@@ -144,7 +144,7 @@ export const getAllStates = async (req: StateRequest, res: Response) => {
     return res.status(200).json(fullStates);
   } catch (err) {
     console.error('Error fetching states:', err);
-    console.log(err)
+    return;
     // return res.status(500).json({ error: 'Internal Server Error' });
   }
 };
