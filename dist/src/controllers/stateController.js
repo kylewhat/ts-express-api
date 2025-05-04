@@ -29,8 +29,11 @@ exports.getState = getState;
 const postState = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const state = req.stateData;
     const { funfacts } = req.body;
-    if (!Array.isArray(funfacts) || funfacts.length === 0) {
-        return res.status(400).json({ error: 'Funfacts must be a non-empty array.' });
+    if (funfacts.length === 0) {
+        return res.status(400).json({ message: 'State fun facts value required' });
+    }
+    if (!Array.isArray(funfacts)) {
+        return res.status(400).json({ message: 'State fun facts value must be an array' });
     }
     try {
         const existingState = yield state_1.default.findOne({ stateCode: state.code }).exec();

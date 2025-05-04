@@ -20,8 +20,12 @@ export const postState = async (req: StateRequest, res: Response) => {
   const state = req.stateData!;
   const { funfacts } = req.body;
 
-  if (!Array.isArray(funfacts) || funfacts.length === 0) {
-    return res.status(400).json({ error: 'Funfacts must be a non-empty array.' });
+  if (funfacts.length === 0) {
+    return res.status(400).json({ message: 'State fun facts value required' });
+  }
+
+  if(!Array.isArray(funfacts) ){
+    return res.status(400).json({ message: 'State fun facts value must be an array' });
   }
 
   try {
