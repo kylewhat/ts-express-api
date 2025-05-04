@@ -7,9 +7,6 @@ A RESTful API for accessing and managing U.S. state data, including fun facts, b
 - TypeScript
 - MongoDB / Mongoose
 
-## 📌 Base URL
-Assumes server is running locally: `http://localhost:3030`
-
 ---
 
 ## 📚 Endpoints
