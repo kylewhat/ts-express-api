@@ -38,6 +38,7 @@ const validateState = (req: StateRequest, res: Response, next: NextFunction): vo
 
   if (!state) {
     res.status(404).json({ message: 'Invalid state abbreviation parameter' });
+    return;
   }
 
   if(req.params.prop){
@@ -73,6 +74,7 @@ app.all('/states{/:state}{/:prop}', validateState, (req: StateRequest, res: Resp
        return;
     default:
       res.status(405).send('Method Not Allowed');
+      return;
   }
 });
 
