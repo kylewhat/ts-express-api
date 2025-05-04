@@ -152,7 +152,7 @@ export const getStateProperty = async (req: StateRequest, res: Response) => {
   try {
     const state = req.stateData!;
     const staticState = (statesData as any[]).find(s => s.code === state.code);
-    const stateName = staticState.name;
+    const stateName = staticState.state;
     const property = req.prop?.toUpperCase();
 
     switch(property) {
