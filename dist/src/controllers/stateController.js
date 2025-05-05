@@ -70,12 +70,12 @@ const patchState = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
     try {
         const existingState = yield state_1.default.findOne({ stateCode: state.code }).exec();
-        if (!existingState || !Array.isArray(existingState.funfacts)) {
-            return res.status(404).json({ message: `No Fun Fact found at that index for ${staticState.state}` });
+        if (!existingState) {
+            return res.status(404).json({ message: `No Fun Facts found for ${staticState.state}` });
         }
         const zeroBasedIndex = index - 1;
         if (zeroBasedIndex < 0 || zeroBasedIndex >= existingState.funfacts.length) {
-            return res.status(400).json({ error: 'Index out of range.' });
+            return res.status(400).json({ message: `No Fun Fact found at that index for ${staticState.state}` });
         }
         existingState.funfacts[zeroBasedIndex] = funfact;
         yield existingState.save();

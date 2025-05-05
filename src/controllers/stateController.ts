@@ -66,14 +66,14 @@ export const patchState = async (req: StateRequest, res: Response) => {
     try {
       const existingState = await State.findOne({ stateCode: state.code }).exec();
   
-      if (!existingState || !Array.isArray(existingState.funfacts)) {
-        return res.status(404).json({ message: `No Fun Fact found at that index for ${staticState.state}`});
+      if (!existingState) {
+        return res.status(404).json({ message: `No Fun Facts found for ${staticState.state}`});
       }
   
       const zeroBasedIndex = index - 1;
   
       if (zeroBasedIndex < 0 || zeroBasedIndex >= existingState.funfacts.length) {
-        return res.status(400).json({ error: 'Index out of range.' });
+        return res.status(400).json({ message: `No Fun Fact found at that index for ${staticState.state}` });
       }
   
       existingState.funfacts[zeroBasedIndex] = funfact;
