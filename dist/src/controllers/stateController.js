@@ -105,7 +105,7 @@ const deleteState = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         // Remove funfact at the index
         existingState.funfacts.splice(zeroBasedIndex, 1);
         yield existingState.save();
-        return res.json(Object.assign(Object.assign({}, state), { funfacts: existingState.funfacts }));
+        return res.json(existingState);
     }
     catch (err) {
         return res.status(500).json({ error: 'Database error', details: err });

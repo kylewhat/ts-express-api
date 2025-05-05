@@ -120,10 +120,7 @@ export const deleteState = async (req: StateRequest, res: Response) => {
     existingState.funfacts.splice(zeroBasedIndex, 1);
     await existingState.save();
 
-    return res.json({
-      ...state,
-      funfacts: existingState.funfacts
-    });
+    return res.json(existingState);
   } catch (err) {
     return res.status(500).json({ error: 'Database error', details: err });
   }
