@@ -18,7 +18,6 @@ const states_json_1 = __importDefault(require("../data/states.json"));
 const getState = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const state = req.stateData;
     const doc = yield state_1.default.findOne({ stateCode: state.code }).exec();
-    const funfacts = (doc === null || doc === void 0 ? void 0 : doc.funfacts) || [];
     const responseData = Object.assign({}, state);
     if ((doc === null || doc === void 0 ? void 0 : doc.funfacts) && doc.funfacts.length > 0) {
         responseData.funfacts = doc.funfacts;
@@ -57,19 +56,22 @@ const postState = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.postState = postState;
 const patchState = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b;
     const state = req.stateData;
-    const { index, funfact } = req.body;
+    const index = (_a = req.body) === null || _a === void 0 ? void 0 : _a.index;
+    const funfact = (_b = req.body) === null || _b === void 0 ? void 0 : _b.funfact;
+    const staticState = states_json_1.default.find(s => s.code === state.code);
     // Validate inputs
     if (!index || typeof index !== 'number' || index < 1) {
-        return res.status(400).json({ error: 'Valid index is required and must be 1 or greater.' });
+        return res.status(400).json({ message: 'State fun fact index value required' });
     }
     if (!funfact || typeof funfact !== 'string') {
-        return res.status(400).json({ error: 'Funfact must be a non-empty string.' });
+        return res.status(400).json({ error: 'State fun fact value required' });
     }
     try {
         const existingState = yield state_1.default.findOne({ stateCode: state.code }).exec();
         if (!existingState || !Array.isArray(existingState.funfacts)) {
-            return res.status(404).json({ message: `No Fun Facts found forfff  ${state.name}` });
+            return res.status(404).json({ message: `No Fun Fact found at that index for ${staticState.state}` });
         }
         const zeroBasedIndex = index - 1;
         if (zeroBasedIndex < 0 || zeroBasedIndex >= existingState.funfacts.length) {
@@ -77,7 +79,7 @@ const patchState = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         }
         existingState.funfacts[zeroBasedIndex] = funfact;
         yield existingState.save();
-        return res.json(Object.assign(Object.assign({}, state), { funfacts: existingState.funfacts }));
+        return res.json(existingState);
     }
     catch (err) {
         return res.status(500).json({ error: 'Database error', details: err });
