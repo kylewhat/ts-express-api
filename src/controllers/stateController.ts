@@ -33,20 +33,14 @@ export const postState = async (req: StateRequest, res: Response) => {
     if (existingState) {
       existingState.funfacts.push(...funfacts);
       await existingState.save();
-      return res.json({
-        ...state,
-        funfacts: existingState.funfacts
-      });
+      return res.json(existingState);
     } else {
         const newState = new State({
           stateCode: state.code,
           funfacts
         });
         await newState.save();
-        return res.status(201).json({
-          ...state,
-          funfacts: newState.funfacts
-        }); 
+        return res.status(201).json(newState); 
     }
   } catch (err) {
     return res.status(500).json({ error: 'Database error', details: err });

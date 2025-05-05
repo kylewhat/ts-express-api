@@ -39,7 +39,7 @@ const postState = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if (existingState) {
             existingState.funfacts.push(...funfacts);
             yield existingState.save();
-            return res.json(Object.assign(Object.assign({}, state), { funfacts: existingState.funfacts }));
+            return res.json(existingState);
         }
         else {
             const newState = new state_1.default({
@@ -47,7 +47,7 @@ const postState = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 funfacts
             });
             yield newState.save();
-            return res.status(201).json(Object.assign(Object.assign({}, state), { funfacts: newState.funfacts }));
+            return res.status(201).json(newState);
         }
     }
     catch (err) {
