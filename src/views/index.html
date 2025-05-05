@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>State Data API</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem auto;
+      max-width: 800px;
+      padding: 0 1rem;
+      line-height: 1.6;
+    }
+    h1, h2 {
+      color: #333;
+    }
+    code {
+      background: #f4f4f4;
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+    pre {
+      background: #f9f9f9;
+      padding: 1rem;
+      border-left: 4px solid #ccc;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🌎 State Data API</h1>
+  <p>A RESTful API for accessing and managing U.S. state data, including fun facts.</p>
+
+  <h2>🛠 Technologies Used</h2>
+  <ul>
+    <li>Node.js / Express</li>
+    <li>TypeScript</li>
+    <li>MongoDB / Mongoose</li>
+  </ul>
+
+  <h2>📚 Endpoints</h2>
+
+  <h3>GET <code>/states</code></h3>
+  <p>Returns all U.S. state data, including fun facts.</p>
+  <p><strong>Optional Query Parameters:</strong></p>
+  <ul>
+    <li><code>?isContig=true</code> — Only the 48 contiguous states.</li>
+    <li><code>?isContig=false</code> — Only Alaska and Hawaii.</li>
+  </ul>
+
+  <h3>GET <code>/states/:state</code></h3>
+  <p>Returns complete data for a single state. <code>:state</code> can be a 2-letter abbreviation.</p>
+
+  <h3>GET <code>/states/:state/:property</code></h3>
+  <p>Returns a single property about the state.</p>
+  <p><strong>Supported properties:</strong></p>
+  <ul>
+    <li><code>funfact</code> — Returns a random fun fact.</li>
+    <li><code>capital</code></li>
+    <li><code>nickname</code></li>
+    <li><code>population</code></li>
+    <li><code>admission</code></li>
+  </ul>
+
+  <h3>POST <code>/states/:state/funfact</code></h3>
+  <p>Add one or more fun facts to a state.</p>
+  <p><strong>Request Body:</strong></p>
+  <pre>{
+  "funfacts": [
+    "This is a state.",
+    "This is a fact."
+  ]
+}</pre>
+
+  <h3>PATCH <code>/states/:state/funfact</code></h3>
+  <p>Update a specific fun fact for a state by its index.</p>
+  <p><strong>Request Body:</strong></p>
+  <pre>{
+  "index": 1,
+  "funfact": "This is an updated fun fact."
+}</pre>
+
+  <h3>DELETE <code>/states/:state/funfact</code></h3>
+  <p>Delete a specific fun fact by index.</p>
+  <p><strong>Request Body:</strong></p>
+  <pre>{
+  "index": 1
+}</pre>
+
+</body>
+</html>

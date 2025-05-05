@@ -60,7 +60,7 @@ export const patchState = async (req: StateRequest, res: Response) => {
     }
   
     if (!funfact || typeof funfact !== 'string') {
-      return res.status(400).json({ error: 'State fun fact value required' });
+      return res.status(400).json({ message: 'State fun fact value required' });
     }
   
     try {

@@ -48,6 +48,10 @@ const validateState = (req: StateRequest, res: Response, next: NextFunction): vo
   next();
 };
 
+app.get('/', (req: Request, res: Response) => {
+  res.sendFile(path.join(__dirname, 'views', 'index.html'));
+});
+
 // Route that delegates to controller methods
 app.all('/states{/:state}{/:prop}', validateState, (req: StateRequest, res: Response) => {
   switch (req.method) {

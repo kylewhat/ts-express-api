@@ -22,7 +22,7 @@ Returns all U.S. state data, including fun facts.
 
 ### `GET /states/:state`
 Returns complete data for a single state.  
-`:state` can be the full state name or its 2-letter abbreviation.
+`:state` its 2-letter abbreviation.
 
 ---
 

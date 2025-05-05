@@ -66,7 +66,7 @@ const patchState = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         return res.status(400).json({ message: 'State fun fact index value required' });
     }
     if (!funfact || typeof funfact !== 'string') {
-        return res.status(400).json({ error: 'State fun fact value required' });
+        return res.status(400).json({ message: 'State fun fact value required' });
     }
     try {
         const existingState = yield state_1.default.findOne({ stateCode: state.code }).exec();
